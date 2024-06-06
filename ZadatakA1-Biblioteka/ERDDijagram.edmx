@@ -1,0 +1,563 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="A1Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Autor">
+          <Key>
+            <PropertyRef Name="AutorID" />
+          </Key>
+          <Property Name="AutorID" Type="int" Nullable="false" />
+          <Property Name="Ime" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Prezime" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DatumRodjenja" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Citalac">
+          <Key>
+            <PropertyRef Name="CitalacID" />
+          </Key>
+          <Property Name="CitalacID" Type="int" Nullable="false" />
+          <Property Name="MaticniBroj" Type="nvarchar" MaxLength="13" Nullable="false" />
+          <Property Name="Ime" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Prezime" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Adresa" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Izdali">
+          <Key>
+            <PropertyRef Name="IzdavacID" />
+            <PropertyRef Name="KnjigaID" />
+          </Key>
+          <Property Name="IzdavacID" Type="int" Nullable="false" />
+          <Property Name="KnjigaID" Type="int" Nullable="false" />
+          <Property Name="Godina" Type="int" />
+        </EntityType>
+        <EntityType Name="Izdavac">
+          <Key>
+            <PropertyRef Name="IzdavacID" />
+          </Key>
+          <Property Name="IzdavacID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Naziv" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Adresa" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Knjiga">
+          <Key>
+            <PropertyRef Name="KnjigaID" />
+          </Key>
+          <Property Name="KnjigaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UDK" Type="int" Nullable="false" />
+          <Property Name="ISBN" Type="int" Nullable="false" />
+          <Property Name="Naziv" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="OgranakID" Type="int" />
+          <Property Name="DatumNabavke" Type="date" />
+        </EntityType>
+        <EntityType Name="Na_Citanju">
+          <Key>
+            <PropertyRef Name="KnjigaID" />
+            <PropertyRef Name="CitalacID" />
+            <PropertyRef Name="DatumUzimanja" />
+          </Key>
+          <Property Name="KnjigaID" Type="int" Nullable="false" />
+          <Property Name="CitalacID" Type="int" Nullable="false" />
+          <Property Name="DatumUzimanja" Type="date" Nullable="false" />
+          <Property Name="DatumVracanja" Type="date" />
+        </EntityType>
+        <EntityType Name="Napisali">
+          <Key>
+            <PropertyRef Name="AutorID" />
+            <PropertyRef Name="KnjigaID" />
+          </Key>
+          <Property Name="AutorID" Type="int" Nullable="false" />
+          <Property Name="KnjigaID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Ogranak">
+          <Key>
+            <PropertyRef Name="OgranakID" />
+          </Key>
+          <Property Name="OgranakID" Type="int" Nullable="false" />
+          <Property Name="NazivSkole" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Primerak">
+          <Key>
+            <PropertyRef Name="KnjigaID" />
+            <PropertyRef Name="PrimerakID" />
+          </Key>
+          <Property Name="KnjigaID" Type="int" Nullable="false" />
+          <Property Name="PrimerakID" Type="int" Nullable="false" />
+          <Property Name="Format" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK__Knjiga__OgranakI__625A9A57">
+          <End Role="Ogranak" Type="Self.Ogranak" Multiplicity="0..1" />
+          <End Role="Knjiga" Type="Self.Knjiga" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ogranak">
+              <PropertyRef Name="OgranakID" />
+            </Principal>
+            <Dependent Role="Knjiga">
+              <PropertyRef Name="OgranakID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Izdali_Izdavac">
+          <End Role="Izdavac" Type="Self.Izdavac" Multiplicity="1" />
+          <End Role="Izdali" Type="Self.Izdali" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Izdavac">
+              <PropertyRef Name="IzdavacID" />
+            </Principal>
+            <Dependent Role="Izdali">
+              <PropertyRef Name="IzdavacID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Izdali_Knjiga">
+          <End Role="Knjiga" Type="Self.Knjiga" Multiplicity="1" />
+          <End Role="Izdali" Type="Self.Izdali" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Knjiga">
+              <PropertyRef Name="KnjigaID" />
+            </Principal>
+            <Dependent Role="Izdali">
+              <PropertyRef Name="KnjigaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Na_Citanju_Citalac">
+          <End Role="Citalac" Type="Self.Citalac" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Na_Citanju" Type="Self.Na_Citanju" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Citalac">
+              <PropertyRef Name="CitalacID" />
+            </Principal>
+            <Dependent Role="Na_Citanju">
+              <PropertyRef Name="CitalacID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Na_Citanju_Knjiga">
+          <End Role="Knjiga" Type="Self.Knjiga" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Na_Citanju" Type="Self.Na_Citanju" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Knjiga">
+              <PropertyRef Name="KnjigaID" />
+            </Principal>
+            <Dependent Role="Na_Citanju">
+              <PropertyRef Name="KnjigaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Napisali_Autor">
+          <End Role="Autor" Type="Self.Autor" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Napisali" Type="Self.Napisali" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Autor">
+              <PropertyRef Name="AutorID" />
+            </Principal>
+            <Dependent Role="Napisali">
+              <PropertyRef Name="AutorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Napisali_Primerak">
+          <End Role="Knjiga" Type="Self.Knjiga" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Napisali" Type="Self.Napisali" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Knjiga">
+              <PropertyRef Name="KnjigaID" />
+            </Principal>
+            <Dependent Role="Napisali">
+              <PropertyRef Name="KnjigaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Primerak_Knjige">
+          <End Role="Knjiga" Type="Self.Knjiga" Multiplicity="1" />
+          <End Role="Primerak" Type="Self.Primerak" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Knjiga">
+              <PropertyRef Name="KnjigaID" />
+            </Principal>
+            <Dependent Role="Primerak">
+              <PropertyRef Name="KnjigaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="A1ModelStoreContainer">
+          <EntitySet Name="Autor" EntityType="Self.Autor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Citalac" EntityType="Self.Citalac" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Izdali" EntityType="Self.Izdali" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Izdavac" EntityType="Self.Izdavac" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Knjiga" EntityType="Self.Knjiga" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Na_Citanju" EntityType="Self.Na_Citanju" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Napisali" EntityType="Self.Napisali" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ogranak" EntityType="Self.Ogranak" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Primerak" EntityType="Self.Primerak" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Knjiga__OgranakI__625A9A57" Association="Self.FK__Knjiga__OgranakI__625A9A57">
+            <End Role="Ogranak" EntitySet="Ogranak" />
+            <End Role="Knjiga" EntitySet="Knjiga" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Izdali_Izdavac" Association="Self.FK_Izdali_Izdavac">
+            <End Role="Izdavac" EntitySet="Izdavac" />
+            <End Role="Izdali" EntitySet="Izdali" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Izdali_Knjiga" Association="Self.FK_Izdali_Knjiga">
+            <End Role="Knjiga" EntitySet="Knjiga" />
+            <End Role="Izdali" EntitySet="Izdali" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Na_Citanju_Citalac" Association="Self.FK_Na_Citanju_Citalac">
+            <End Role="Citalac" EntitySet="Citalac" />
+            <End Role="Na_Citanju" EntitySet="Na_Citanju" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Na_Citanju_Knjiga" Association="Self.FK_Na_Citanju_Knjiga">
+            <End Role="Knjiga" EntitySet="Knjiga" />
+            <End Role="Na_Citanju" EntitySet="Na_Citanju" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Napisali_Autor" Association="Self.FK_Napisali_Autor">
+            <End Role="Autor" EntitySet="Autor" />
+            <End Role="Napisali" EntitySet="Napisali" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Napisali_Primerak" Association="Self.FK_Napisali_Primerak">
+            <End Role="Knjiga" EntitySet="Knjiga" />
+            <End Role="Napisali" EntitySet="Napisali" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Primerak_Knjige" Association="Self.FK_Primerak_Knjige">
+            <End Role="Knjiga" EntitySet="Knjiga" />
+            <End Role="Primerak" EntitySet="Primerak" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="A1Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Autor">
+          <Key>
+            <PropertyRef Name="AutorID" />
+          </Key>
+          <Property Name="AutorID" Type="Int32" Nullable="false" />
+          <Property Name="Ime" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Prezime" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DatumRodjenja" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Knjigas" Relationship="Self.Napisali" FromRole="Autor" ToRole="Knjiga" />
+        </EntityType>
+        <EntityType Name="Citalac">
+          <Key>
+            <PropertyRef Name="CitalacID" />
+          </Key>
+          <Property Name="CitalacID" Type="Int32" Nullable="false" />
+          <Property Name="MaticniBroj" Type="String" MaxLength="13" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Ime" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Prezime" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Adresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Na_Citanju" Relationship="Self.FK_Na_Citanju_Citalac" FromRole="Citalac" ToRole="Na_Citanju" />
+        </EntityType>
+        <EntityType Name="Izdali">
+          <Key>
+            <PropertyRef Name="IzdavacID" />
+            <PropertyRef Name="KnjigaID" />
+          </Key>
+          <Property Name="IzdavacID" Type="Int32" Nullable="false" />
+          <Property Name="KnjigaID" Type="Int32" Nullable="false" />
+          <Property Name="Godina" Type="Int32" />
+          <NavigationProperty Name="Izdavac" Relationship="Self.FK_Izdali_Izdavac" FromRole="Izdali" ToRole="Izdavac" />
+          <NavigationProperty Name="Knjiga" Relationship="Self.FK_Izdali_Knjiga" FromRole="Izdali" ToRole="Knjiga" />
+        </EntityType>
+        <EntityType Name="Izdavac">
+          <Key>
+            <PropertyRef Name="IzdavacID" />
+          </Key>
+          <Property Name="IzdavacID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Naziv" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Adresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Izdalis" Relationship="Self.FK_Izdali_Izdavac" FromRole="Izdavac" ToRole="Izdali" />
+        </EntityType>
+        <EntityType Name="Knjiga">
+          <Key>
+            <PropertyRef Name="KnjigaID" />
+          </Key>
+          <Property Name="KnjigaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UDK" Type="Int32" Nullable="false" />
+          <Property Name="ISBN" Type="Int32" Nullable="false" />
+          <Property Name="Naziv" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OgranakID" Type="Int32" />
+          <Property Name="DatumNabavke" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Izdalis" Relationship="Self.FK_Izdali_Knjiga" FromRole="Knjiga" ToRole="Izdali" />
+          <NavigationProperty Name="Ogranak" Relationship="Self.FK__Knjiga__OgranakI__625A9A57" FromRole="Knjiga" ToRole="Ogranak" />
+          <NavigationProperty Name="Na_Citanju" Relationship="Self.FK_Na_Citanju_Knjiga" FromRole="Knjiga" ToRole="Na_Citanju" />
+          <NavigationProperty Name="Primeraks" Relationship="Self.FK_Primerak_Knjige" FromRole="Knjiga" ToRole="Primerak" />
+          <NavigationProperty Name="Autors" Relationship="Self.Napisali" FromRole="Knjiga" ToRole="Autor" />
+        </EntityType>
+        <EntityType Name="Na_Citanju">
+          <Key>
+            <PropertyRef Name="KnjigaID" />
+            <PropertyRef Name="CitalacID" />
+            <PropertyRef Name="DatumUzimanja" />
+          </Key>
+          <Property Name="KnjigaID" Type="Int32" Nullable="false" />
+          <Property Name="CitalacID" Type="Int32" Nullable="false" />
+          <Property Name="DatumUzimanja" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DatumVracanja" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Citalac" Relationship="Self.FK_Na_Citanju_Citalac" FromRole="Na_Citanju" ToRole="Citalac" />
+          <NavigationProperty Name="Knjiga" Relationship="Self.FK_Na_Citanju_Knjiga" FromRole="Na_Citanju" ToRole="Knjiga" />
+        </EntityType>
+        <EntityType Name="Ogranak">
+          <Key>
+            <PropertyRef Name="OgranakID" />
+          </Key>
+          <Property Name="OgranakID" Type="Int32" Nullable="false" />
+          <Property Name="NazivSkole" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Knjigas" Relationship="Self.FK__Knjiga__OgranakI__625A9A57" FromRole="Ogranak" ToRole="Knjiga" />
+        </EntityType>
+        <EntityType Name="Primerak">
+          <Key>
+            <PropertyRef Name="KnjigaID" />
+            <PropertyRef Name="PrimerakID" />
+          </Key>
+          <Property Name="KnjigaID" Type="Int32" Nullable="false" />
+          <Property Name="PrimerakID" Type="Int32" Nullable="false" />
+          <Property Name="Format" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Knjiga" Relationship="Self.FK_Primerak_Knjige" FromRole="Primerak" ToRole="Knjiga" />
+        </EntityType>
+        <Association Name="FK_Na_Citanju_Citalac">
+          <End Role="Citalac" Type="Self.Citalac" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Na_Citanju" Type="Self.Na_Citanju" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Citalac">
+              <PropertyRef Name="CitalacID" />
+            </Principal>
+            <Dependent Role="Na_Citanju">
+              <PropertyRef Name="CitalacID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Izdali_Izdavac">
+          <End Role="Izdavac" Type="Self.Izdavac" Multiplicity="1" />
+          <End Role="Izdali" Type="Self.Izdali" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Izdavac">
+              <PropertyRef Name="IzdavacID" />
+            </Principal>
+            <Dependent Role="Izdali">
+              <PropertyRef Name="IzdavacID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Izdali_Knjiga">
+          <End Role="Knjiga" Type="Self.Knjiga" Multiplicity="1" />
+          <End Role="Izdali" Type="Self.Izdali" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Knjiga">
+              <PropertyRef Name="KnjigaID" />
+            </Principal>
+            <Dependent Role="Izdali">
+              <PropertyRef Name="KnjigaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Knjiga__OgranakI__625A9A57">
+          <End Role="Ogranak" Type="Self.Ogranak" Multiplicity="0..1" />
+          <End Role="Knjiga" Type="Self.Knjiga" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ogranak">
+              <PropertyRef Name="OgranakID" />
+            </Principal>
+            <Dependent Role="Knjiga">
+              <PropertyRef Name="OgranakID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Na_Citanju_Knjiga">
+          <End Role="Knjiga" Type="Self.Knjiga" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Na_Citanju" Type="Self.Na_Citanju" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Knjiga">
+              <PropertyRef Name="KnjigaID" />
+            </Principal>
+            <Dependent Role="Na_Citanju">
+              <PropertyRef Name="KnjigaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Primerak_Knjige">
+          <End Role="Knjiga" Type="Self.Knjiga" Multiplicity="1" />
+          <End Role="Primerak" Type="Self.Primerak" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Knjiga">
+              <PropertyRef Name="KnjigaID" />
+            </Principal>
+            <Dependent Role="Primerak">
+              <PropertyRef Name="KnjigaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Napisali">
+          <End Role="Autor" Type="Self.Autor" Multiplicity="*" />
+          <End Role="Knjiga" Type="Self.Knjiga" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="A1Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Autors" EntityType="Self.Autor" />
+          <EntitySet Name="Citalacs" EntityType="Self.Citalac" />
+          <EntitySet Name="Izdalis" EntityType="Self.Izdali" />
+          <EntitySet Name="Izdavacs" EntityType="Self.Izdavac" />
+          <EntitySet Name="Knjigas" EntityType="Self.Knjiga" />
+          <EntitySet Name="Na_Citanju" EntityType="Self.Na_Citanju" />
+          <EntitySet Name="Ogranaks" EntityType="Self.Ogranak" />
+          <EntitySet Name="Primeraks" EntityType="Self.Primerak" />
+          <AssociationSet Name="FK_Na_Citanju_Citalac" Association="Self.FK_Na_Citanju_Citalac">
+            <End Role="Citalac" EntitySet="Citalacs" />
+            <End Role="Na_Citanju" EntitySet="Na_Citanju" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Izdali_Izdavac" Association="Self.FK_Izdali_Izdavac">
+            <End Role="Izdavac" EntitySet="Izdavacs" />
+            <End Role="Izdali" EntitySet="Izdalis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Izdali_Knjiga" Association="Self.FK_Izdali_Knjiga">
+            <End Role="Knjiga" EntitySet="Knjigas" />
+            <End Role="Izdali" EntitySet="Izdalis" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Knjiga__OgranakI__625A9A57" Association="Self.FK__Knjiga__OgranakI__625A9A57">
+            <End Role="Ogranak" EntitySet="Ogranaks" />
+            <End Role="Knjiga" EntitySet="Knjigas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Na_Citanju_Knjiga" Association="Self.FK_Na_Citanju_Knjiga">
+            <End Role="Knjiga" EntitySet="Knjigas" />
+            <End Role="Na_Citanju" EntitySet="Na_Citanju" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Primerak_Knjige" Association="Self.FK_Primerak_Knjige">
+            <End Role="Knjiga" EntitySet="Knjigas" />
+            <End Role="Primerak" EntitySet="Primeraks" />
+          </AssociationSet>
+          <AssociationSet Name="Napisali" Association="Self.Napisali">
+            <End Role="Autor" EntitySet="Autors" />
+            <End Role="Knjiga" EntitySet="Knjigas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="A1ModelStoreContainer" CdmEntityContainer="A1Entities">
+          <EntitySetMapping Name="Autors">
+            <EntityTypeMapping TypeName="A1Model.Autor">
+              <MappingFragment StoreEntitySet="Autor">
+                <ScalarProperty Name="AutorID" ColumnName="AutorID" />
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="DatumRodjenja" ColumnName="DatumRodjenja" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Citalacs">
+            <EntityTypeMapping TypeName="A1Model.Citalac">
+              <MappingFragment StoreEntitySet="Citalac">
+                <ScalarProperty Name="CitalacID" ColumnName="CitalacID" />
+                <ScalarProperty Name="MaticniBroj" ColumnName="MaticniBroj" />
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="Adresa" ColumnName="Adresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Izdalis">
+            <EntityTypeMapping TypeName="A1Model.Izdali">
+              <MappingFragment StoreEntitySet="Izdali">
+                <ScalarProperty Name="IzdavacID" ColumnName="IzdavacID" />
+                <ScalarProperty Name="KnjigaID" ColumnName="KnjigaID" />
+                <ScalarProperty Name="Godina" ColumnName="Godina" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Izdavacs">
+            <EntityTypeMapping TypeName="A1Model.Izdavac">
+              <MappingFragment StoreEntitySet="Izdavac">
+                <ScalarProperty Name="IzdavacID" ColumnName="IzdavacID" />
+                <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+                <ScalarProperty Name="Adresa" ColumnName="Adresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Knjigas">
+            <EntityTypeMapping TypeName="A1Model.Knjiga">
+              <MappingFragment StoreEntitySet="Knjiga">
+                <ScalarProperty Name="KnjigaID" ColumnName="KnjigaID" />
+                <ScalarProperty Name="UDK" ColumnName="UDK" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+                <ScalarProperty Name="OgranakID" ColumnName="OgranakID" />
+                <ScalarProperty Name="DatumNabavke" ColumnName="DatumNabavke" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Na_Citanju">
+            <EntityTypeMapping TypeName="A1Model.Na_Citanju">
+              <MappingFragment StoreEntitySet="Na_Citanju">
+                <ScalarProperty Name="KnjigaID" ColumnName="KnjigaID" />
+                <ScalarProperty Name="CitalacID" ColumnName="CitalacID" />
+                <ScalarProperty Name="DatumUzimanja" ColumnName="DatumUzimanja" />
+                <ScalarProperty Name="DatumVracanja" ColumnName="DatumVracanja" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ogranaks">
+            <EntityTypeMapping TypeName="A1Model.Ogranak">
+              <MappingFragment StoreEntitySet="Ogranak">
+                <ScalarProperty Name="OgranakID" ColumnName="OgranakID" />
+                <ScalarProperty Name="NazivSkole" ColumnName="NazivSkole" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Primeraks">
+            <EntityTypeMapping TypeName="A1Model.Primerak">
+              <MappingFragment StoreEntitySet="Primerak">
+                <ScalarProperty Name="KnjigaID" ColumnName="KnjigaID" />
+                <ScalarProperty Name="PrimerakID" ColumnName="PrimerakID" />
+                <ScalarProperty Name="Format" ColumnName="Format" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Napisali" TypeName="A1Model.Napisali" StoreEntitySet="Napisali">
+            <EndProperty Name="Autor">
+              <ScalarProperty Name="AutorID" ColumnName="AutorID" />
+            </EndProperty>
+            <EndProperty Name="Knjiga">
+              <ScalarProperty Name="KnjigaID" ColumnName="KnjigaID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
